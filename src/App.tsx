@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import profileImg from './assets/hero.png'
 
@@ -13,6 +13,18 @@ type Project = {
   description: string
   tags: string[]
   href: string
+}
+
+type GithubRepo = {
+  id: number
+  name: string
+  html_url: string
+  description: string | null
+  language: string | null
+  topics?: string[]
+  fork: boolean
+  archived: boolean
+  updated_at: string
 }
 
 function Icon({
@@ -40,6 +52,19 @@ function App() {
     damping: 30,
     restDelta: 0.001,
   })
+
+  const githubUsername = 'mevzin'
+  const githubProjectsLimitRaw = Number(
+    import.meta.env.VITE_GITHUB_PROJECTS_LIMIT ?? '6',
+  )
+  const githubProjectsLimit = Number.isFinite(githubProjectsLimitRaw)
+    ? Math.max(1, Math.min(12, githubProjectsLimitRaw))
+    : 6
+  const isGithubConfigured = true
+
+  const [githubProjects, setGithubProjects] = useState<Project[] | null>(null)
+  const [githubLoading, setGithubLoading] = useState(false)
+  const [githubError, setGithubError] = useState<string | null>(null)
 
   const technologies: Tech[] = [
     {
@@ -237,29 +262,90 @@ function App() {
     },
   ]
 
-  const projects: Project[] = [
-    {
-      title: 'Sistema de Máquina XP',
-      description:
-        'Sistema para acompanhamento de evolução com metas, níveis e histórico de progresso.',
-      tags: ['React', 'Node', 'MongoDB'],
-      href: '#',
-    },
-    {
-      title: 'Bot Discord Financeiro',
-      description:
-        'Bot para registrar entradas/saídas, gerar relatórios e facilitar o controle financeiro.',
-      tags: ['Node', 'Discord.js', 'SQLite'],
-      href: '#',
-    },
-    {
-      title: 'API de Agendamentos',
-      description:
-        'API com autenticação, disponibilidade e confirmação de horários para serviços.',
-      tags: ['Node', 'TypeScript', 'MySQL'],
-      href: '#',
-    },
-  ]
+  useEffect(() => {
+    if (!isGithubConfigured) return
+
+    let active = true
+
+    async function load() {
+      try {
+        if (active) {
+          setGithubLoading(true)
+          setGithubError(null)
+        }
+
+        const path = `/users/${encodeURIComponent(githubUsername)}/repos?per_page=100&sort=updated`
+        const headers = {
+          Accept: 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        }
+
+        const url = import.meta.env.DEV
+          ? `/github${path}`
+          : `https://api.github.com${path}`
+
+        const response = await fetch(url, { headers })
+
+        if (!response.ok) {
+          const remaining = response.headers.get('x-ratelimit-remaining')
+          if (response.status === 403 && remaining === '0') {
+            throw new Error('RATE_LIMIT')
+          }
+          if (response.status === 404) {
+            throw new Error('NOT_FOUND')
+          }
+          throw new Error(`GitHub API: ${response.status}`)
+        }
+
+        const data = (await response.json()) as GithubRepo[]
+
+        const mapped = data
+          .filter((repo) => !repo.fork && !repo.archived)
+          .sort(
+            (a, b) =>
+              new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+          )
+          .slice(0, githubProjectsLimit)
+          .map<Project>((repo) => {
+            const tags = [
+              repo.language ?? undefined,
+              ...(repo.topics ?? []),
+            ].filter(Boolean) as string[]
+
+            return {
+              title: repo.name,
+              description: repo.description ?? 'Sem descrição.',
+              tags: tags.slice(0, 4),
+              href: repo.html_url,
+            }
+          })
+
+        if (active) setGithubProjects(mapped)
+      } catch (err) {
+        if (!active) return
+        if (err instanceof Error && err.message === 'NOT_FOUND') {
+          setGithubError('Usuário não encontrado no GitHub.')
+        } else if (err instanceof Error && err.message === 'RATE_LIMIT') {
+          setGithubError(
+            'Limite de requisições do GitHub atingido. Tente mais tarde.',
+          )
+        } else {
+          setGithubError('Não foi possível carregar seus repositórios agora.')
+        }
+        setGithubProjects([])
+      } finally {
+        if (active) setGithubLoading(false)
+      }
+    }
+
+    load()
+
+    return () => {
+      active = false
+    }
+  }, [githubProjectsLimit, githubUsername, isGithubConfigured])
+
+  const projects = githubProjects ?? []
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 18 },
@@ -446,6 +532,15 @@ function App() {
             <h2 className="text-center text-lg font-semibold text-neutral-50">
               Projetos
             </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-neutral-400">
+              {githubLoading
+                ? 'Carregando repositórios...'
+                : githubError
+                  ? githubError
+                  : projects.length === 0
+                    ? 'Nenhum repositório público encontrado.'
+                    : `Repositórios públicos de @${githubUsername}`}
+            </p>
             <motion.div
               variants={gridVariants}
               initial="hidden"
@@ -514,8 +609,8 @@ function App() {
               {[
                 {
                   title: 'Email',
-                  subtitle: 'email@exemplo.com',
-                  href: 'mailto:email@exemplo.com',
+                  subtitle: 'thiagomev@gmail.com',
+                  href: 'mailto:thiagomev@gmail.com',
                   icon: (
                     <Icon>
                       <path
@@ -535,8 +630,8 @@ function App() {
                 },
                 {
                   title: 'GitHub',
-                  subtitle: 'github.com/seuusuario',
-                  href: 'https://github.com/',
+                  subtitle: 'github.com/mevzin',
+                  href: 'https://github.com/mevzin',
                   icon: (
                     <Icon>
                       <path
@@ -548,8 +643,8 @@ function App() {
                 },
                 {
                   title: 'LinkedIn',
-                  subtitle: 'linkedin.com/in/seuusuario',
-                  href: 'https://www.linkedin.com/',
+                  subtitle: 'linkedin.com/in/thiagotorresmev/',
+                  href: 'https://www.linkedin.com/in/thiagotorresmev/',
                   icon: (
                     <Icon>
                       <path

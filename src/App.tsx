@@ -373,8 +373,8 @@ function App() {
         className="fixed left-0 top-0 z-50 h-1 w-full origin-left bg-violet-500"
       />
 
-      <div className="mx-auto min-h-screen w-full max-w-5xl border-x border-neutral-800">
-        <header className="sticky top-0 z-40 border-b border-neutral-800 bg-neutral-950/70 backdrop-blur">
+      <div className="mx-auto min-h-screen w-full max-w-5xl border-x border-transparent">
+        <header className="sticky top-0 z-40 border-b border-transparent bg-neutral-950/70 backdrop-blur">
           <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
             <a
               href="#topo"
@@ -392,7 +392,7 @@ function App() {
                 <a
                   key={item.href}
                   href={item.href}
-                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-3 py-1 text-xs text-neutral-200 transition hover:border-neutral-700 hover:bg-neutral-900"
+                  className="rounded-full border border-transparent bg-neutral-900/40 px-3 py-1 text-xs text-neutral-200 transition hover:border-transparent hover:bg-neutral-900"
                 >
                   {item.label}
                 </a>
@@ -430,7 +430,7 @@ function App() {
                   </a>
                   <a
                     href="#contato"
-                    className="inline-flex items-center justify-center rounded-md border border-neutral-700 bg-neutral-900/40 px-5 py-2 text-sm font-semibold text-neutral-100 transition hover:border-neutral-600 hover:bg-neutral-900"
+                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-neutral-900/40 px-5 py-2 text-sm font-semibold text-neutral-100 transition hover:border-transparent hover:bg-neutral-900"
                   >
                     Contato
                   </a>
@@ -446,7 +446,7 @@ function App() {
               >
                 <div className="relative">
                   <div className="absolute -inset-6 rounded-full bg-violet-500/10 blur-2xl" />
-                  <div className="relative h-56 w-56 overflow-hidden rounded-full border border-neutral-800 bg-neutral-900/40">
+                  <div className="relative h-56 w-56 overflow-hidden rounded-full border border-transparent bg-neutral-900/40">
                     <img
                       src={profileImg}
                       alt="Foto de perfil"
@@ -502,10 +502,10 @@ function App() {
                   key={tech.title}
                   variants={cardVariants}
                   transition={{ duration: 0.45, ease: 'easeOut' }}
-                  className="rounded-lg border border-neutral-800 bg-neutral-900/30 p-4 text-left shadow-[0_0_0_1px_rgba(0,0,0,0.0)] transition hover:border-neutral-700 hover:bg-neutral-900/45"
+                  className="rounded-lg border border-transparent bg-neutral-900/30 p-4 text-left shadow-[0_0_0_1px_rgba(0,0,0,0.0)] transition hover:border-transparent hover:bg-neutral-900/45"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-md border border-neutral-800 bg-neutral-950">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-md border border-transparent bg-neutral-950">
                       {tech.icon}
                     </div>
                     <div>
@@ -554,7 +554,7 @@ function App() {
                   variants={cardVariants}
                   transition={{ duration: 0.45, ease: 'easeOut' }}
                   href={project.href}
-                  className="group rounded-lg border border-neutral-800 bg-neutral-900/30 p-5 text-left transition hover:border-neutral-700 hover:bg-neutral-900/45"
+                  className="group rounded-lg border border-transparent bg-neutral-900/30 p-5 text-left transition hover:border-transparent hover:bg-neutral-900/45"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <p className="text-sm font-semibold text-neutral-100">
@@ -571,7 +571,7 @@ function App() {
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-neutral-800 bg-neutral-950/40 px-2.5 py-1 text-[11px] text-neutral-300"
+                        className="rounded-full border border-transparent bg-neutral-950/40 px-2.5 py-1 text-[11px] text-neutral-300"
                       >
                         {tag}
                       </span>
@@ -674,10 +674,10 @@ function App() {
                       ? 'noreferrer noopener'
                       : undefined
                   }
-                  className="rounded-lg border border-neutral-800 bg-neutral-900/30 p-5 text-left transition hover:border-neutral-700 hover:bg-neutral-900/45"
+                  className="rounded-lg border border-transparent bg-neutral-900/30 p-5 text-left transition hover:border-transparent hover:bg-neutral-900/45"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-md border border-neutral-800 bg-neutral-950">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-md border border-transparent bg-neutral-950">
                       {item.icon}
                     </div>
                     <div>

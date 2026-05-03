@@ -471,10 +471,9 @@ function App() {
           >
             <h2 className="text-lg font-semibold text-neutral-50">Sobre mim</h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-neutral-300 md:text-base">
-              Sou desenvolvedor full stack com experiência em Node.js, MongoDB e
-              desenvolvimento de APIs com autenticação e integração com serviços
-              externos. No front-end, crio interfaces responsivas e acessíveis
-              com React e Tailwind.
+              Sou desenvolvedor Full Stack especializado em Node.js, TypeScript e MongoDB, com foco na criação de sistemas sob medida, APIs e automações.
+              Já desenvolvi bots para Discord, sistemas integrados com banco de dados e soluções voltadas para servidores RP, sempre priorizando eficiência, organização e entrega funcional.
+              Meu objetivo é ajudar clientes a transformar ideias em soluções reais, com sistemas estáveis, escaláveis e prontos para uso.
             </p>
           </motion.section>
 
